@@ -1,0 +1,11 @@
+*
+
+!*/
+!*.ml
+!*.md
+!.gitignore
+!Makefile
+!_tags
+!.merlin
+
+_build
