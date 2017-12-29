@@ -5,7 +5,6 @@
 %token <string> IDENT
 %token DEF
 %token EXTERN
-
 %token <char> PLUS MINUS TIMES DIV
 %token LPAREN RPAREN
 (* %token SET *)
@@ -17,6 +16,7 @@
 %token EOF
 %token SEMICOLON
 %token COMMA
+
 %start parse_toplevel
 %type <Ast.expr> parse_toplevel
 
@@ -26,7 +26,7 @@
 %start parse_extern
 %type <Ast.proto> parse_extern
 
-%start entry_point             /* the entry point */
+%start entry_point
 %type <Ast.t option> entry_point
 
 
@@ -34,7 +34,6 @@
 
 (* Menhir let us give names to symbol values,
    instead of having to use $1, $2, $3 as in ocamlyacc *)
-parse_toplevel: e = expr EOF { e };
 
 expr
   : n = NUMBER
@@ -60,12 +59,13 @@ bin_op_expr
   : c=PLUS | c=MINUS | c=TIMES | c=DIV { c }
   ;
 
-
-parse_definition: d=definition EOF { d };
-
 definition
   : DEF p=prototype e=expr
     { Ast.Function (p, e) }
+  ;
+
+extern
+  : EXTERN p=prototype { p }
   ;
 
 argument_proto
@@ -80,15 +80,16 @@ prototype
     { Ast.Prototype (id, [||]) }
   ;
 
+
+parse_toplevel: e = expr EOF { e };
+
+parse_definition: d=definition EOF { d };
+
 parse_extern: x=extern EOF { x }
 
-extern
-  : EXTERN p=prototype { p }
-  ;
-
 entry_point
-  : EOF { None }
-  | e=expr SEMICOLON { Some (Ast.Toplevel e) }
+  : e=expr SEMICOLON { Some (Ast.Toplevel e) }
   | d=definition SEMICOLON { Some (Ast.Definition d) }
   | x=extern SEMICOLON { Some (Ast.Extern x) }
+  | EOF { None }
   ;

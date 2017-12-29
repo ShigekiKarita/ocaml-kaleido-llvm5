@@ -7,13 +7,13 @@ let digit = ['0'-'9']
 let frac = '.' digit*
 let exp = ['e' 'E'] ['-' '+']? digit+
 let float = digit* frac? exp?
-let identifier = ['A'-'z' 'a'-'z'] ['A'-'z' 'a'-'z' '0'-'9']?
+let identifier = ['A'-'z' 'a'-'z'] ['A'-'z' 'a'-'z' '0'-'9']*
 
 rule token = parse
   (* TODO skip comment *)
   | [' ' '\r' '\t' '\n']    { token lexbuf }     (* skip blanks *)
-  | "extern"                { P.EXTERN }
   | "def"                   { P.DEF }
+  | "extern"                { P.EXTERN }
   | identifier as ident     { P.IDENT ident }
   | float as lxm            { P.NUMBER (float_of_string lxm) }
   (* | '='                     { P.SET } *)
