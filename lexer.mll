@@ -7,7 +7,7 @@ let digit = ['0'-'9']
 let frac = '.' digit*
 let exp = ['e' 'E'] ['-' '+']? digit+
 let float = digit* frac? exp?
-let identifier = ['A'-'z' 'a'-'z'] ['A'-'z' 'a'-'z' '0'-'9']*
+let identifier = ['A'-'Z' 'a'-'z'] ['A'-'z' 'a'-'z' '0'-'9']*
 
 rule token = parse
   (* TODO skip comment *)
