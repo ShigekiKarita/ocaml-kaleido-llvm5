@@ -19,9 +19,10 @@ profile:
 debug:
 	$(OCB) -tag debug $(TARGET).byte
 
-test:
+test: toy.native
 	$(OCB) -I test test.native
 	./test.native
+	cat test.txt | ./toy.native
 
 .PHONY: all clean byte native profile debug sanity test
 

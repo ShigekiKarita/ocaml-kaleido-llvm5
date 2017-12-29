@@ -35,4 +35,5 @@ type t =
   | Definition of func
   | Toplevel of expr
   | Extern of proto
+  | Semicolon
   [@@deriving show]

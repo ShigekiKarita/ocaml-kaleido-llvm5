@@ -91,5 +91,6 @@ entry_point
   : e=expr SEMICOLON { Some (Ast.Toplevel e) }
   | d=definition SEMICOLON { Some (Ast.Definition d) }
   | x=extern SEMICOLON { Some (Ast.Extern x) }
+  | SEMICOLON { Some Ast.Semicolon }
   | EOF { None }
   ;

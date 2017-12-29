@@ -9,17 +9,15 @@ let anonymous_func_count = ref 0
 
 (* top ::= definition | external | expression | ';' *)
 let rec main_loop the_fpm the_execution_engine =
+  (* TODO support multiple expressions, externals and definitions *)
   let parsed = Parser.entry_point Lexer.token (Lexing.from_channel stdin) in
   begin
   match parsed with
   | None -> ()
-  (* ignore top-level semicolons. *)
-  (* | Parser.SEMICOLON -> *)
-  (*     Stream.junk stream; *)
-  (*     main_loop the_fpm the_execution_engine stream *)
-
   | Some result ->
+     Printf.printf "AST: %s\n" Ast.(show result);
      begin match result with
+     | Ast.Semicolon -> () (* ignore top-level semicolons. *)
      | Ast.Definition e ->
         begin
           print_endline "parsed a function definition.";

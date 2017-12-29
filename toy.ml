@@ -10,13 +10,6 @@ open Llvm_scalar_opts
 let main () =
   ignore (Llvm_executionengine.initialize ());
 
-  (* Install standard binary operators.
-   * 1 is the lowest precedence. *)
-  (* Hashtbl.add Parser.binop_precedence '<' 10; *)
-  (* Hashtbl.add Parser.binop_precedence '+' 20; *)
-  (* Hashtbl.add Parser.binop_precedence '-' 20; *)
-  (* Hashtbl.add Parser.binop_precedence '*' 40;    (\* highest. *\) *)
-
   (* Prime the first token. *)
   print_string "ready> "; flush stdout;
   (* let stream = Lexer.lex (Stream.of_channel stdin) in *)
@@ -25,10 +18,7 @@ let main () =
   let the_execution_engine = Llvm_executionengine.create Codegen.the_module in
   let the_fpm = PassManager.create_function Codegen.the_module in
 
-  (* Set up the optimizer pipeline.  Start with registering info about how the
-   * target lays out data structures. *)
-  (* TODO
-  DataLayout.add (ExecutionEngine.target_data the_execution_engine) the_fpm; *)
+  (* Set up the optimizer pipeline. *)
 
   (* Do simple "peephole" optimizations and bit-twiddling optzn. *)
   add_instruction_combination the_fpm;
