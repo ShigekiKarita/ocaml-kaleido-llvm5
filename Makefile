@@ -1,5 +1,4 @@
-OCB_FLAGS = -use-ocamlfind -I src
-# -package llvm -package llvm.analysis  # -use-menhir
+OCB_FLAGS = -use-ocamlfind -use-menhir
 OCB = ocamlbuild $(OCB_FLAGS)
 TARGET := toy
 
