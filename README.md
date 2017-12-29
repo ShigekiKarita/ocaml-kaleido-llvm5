@@ -15,7 +15,7 @@ rewriting [the out-of-date OCaml tutorial in LLVM5.0.0](http://releases.llvm.org
 - rewrite lexer/parser with menhir
 
 ``` console
-$ opam install batteries menhir merlin llvm.5.0.0 ctypes-foreign utop camlp4
+$ opam install batteries menhir merlin llvm.5.0.0 ctypes-foreign utop
 $ make
 $ ./toy.native
 ready> 1+2;

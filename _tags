@@ -1,5 +1,4 @@
-<{lexer,parser}.ml>: use_camlp4, pp(camlp4of)
 <*.{byte,native}>: package(llvm,llvm.analysis,llvm.executionengine,llvm.scalar_opts)
-<*>: package(batteries,ppx_deriving.std)
+<*>: package(batteries,ppx_deriving.std), use_menhir
 <{toy,toplevel,codegen}.ml>: package(llvm,llvm.analysis,llvm.executionengine,llvm.scalar_opts)
 

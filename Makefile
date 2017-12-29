@@ -1,5 +1,5 @@
-OCB_FLAGS = -use-ocamlfind -use-menhir
-OCB = ocamlbuild $(OCB_FLAGS)
+OCB_FLAGS := -use-ocamlfind
+OCB := ocamlbuild $(OCB_FLAGS)
 TARGET := toy
 
 all: native # byte profile debug
@@ -37,4 +37,4 @@ install-ocaml-bin:
 	opam switch 4.06.0+flambda
 
 install-ocaml-packages:
-	opam install batteries menhir merlin llvm.5.0.0 ctypes-foreign utop camlp4
+	opam install batteries menhir merlin llvm.5.0.0 ctypes-foreign utop
