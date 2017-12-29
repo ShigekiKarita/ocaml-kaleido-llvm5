@@ -7,7 +7,7 @@ module E = Llvm_executionengine
 
 
 (* top ::= definition | external | expression | ';' *)
-let rec main_loop the_fpm the_execution_engine =
+let main_loop the_fpm the_execution_engine =
   (* TODO support multiple expressions, externals and definitions *)
   let rec go count =
     Parser.entry_point Lexer.token (Lexing.from_channel stdin)
