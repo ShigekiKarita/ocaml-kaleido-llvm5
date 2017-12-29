@@ -2,6 +2,9 @@
 
 !*/
 !*.ml
+!*.mli
+!*.mly
+!*.mll
 !*.md
 !.gitignore
 !Makefile
