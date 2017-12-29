@@ -29,16 +29,15 @@ let main_loop the_fpm the_execution_engine =
             end
          | Ast.Toplevel expr ->
             begin
-              let e = Ast.Function (Ast.Prototype ("", [||]), expr) in
-              E.add_module Codegen.the_module the_execution_engine;
               (* Evaluate a top-level expression into an anonymous function. *)
               print_endline "parsed a top-level expr";
               let tmp_name = Format.sprintf "_anonymous_func_%d" count in
-              let tmp_func = Ast.set_func_name tmp_name e in
-              let the_function = Codegen.codegen_func the_fpm tmp_func in
-              L.dump_value the_function;
+              let tmp_func = Ast.Function (Ast.Prototype (tmp_name, [||]), expr) in
 
               (* JIT the function, returning a function pointer. *)
+              E.add_module Codegen.the_module the_execution_engine;
+              let the_function = Codegen.codegen_func the_fpm tmp_func in
+              L.dump_value the_function;
               let fp = E.get_function_address
                          tmp_name (Foreign.funptr Ctypes.(void @-> returning double))
                          the_execution_engine in
