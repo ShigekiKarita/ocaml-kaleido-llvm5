@@ -12,25 +12,25 @@ let main_loop the_fpm the_execution_engine input =
   let eval_count = ref 0 in
   let rec go count =
     let rec eval_ast result =
-      Printf.printf "AST: %s\n" Ast.(show result);
+      Printf.eprintf "AST: %s\n" Ast.(show result);
       begin
         try
           match result with
           | Ast.Semicolon -> (); (* ignore top-level semicolons. *)
           | Ast.Definition e ->
              begin
-               print_endline "parsed a function definition.";
+               prerr_endline "parsed a function definition.";
                L.dump_value (Codegen.codegen_func the_fpm e);
              end
           | Ast.Extern e ->
              begin
-               print_endline "parsed an extern.";
+               prerr_endline "parsed an extern.";
                L.dump_value (Codegen.codegen_proto e);
              end
           | Ast.Toplevel expr ->
              begin
                (* Evaluate a top-level expression into an anonymous function. *)
-               print_endline "parsed a top-level expr";
+               prerr_endline "parsed a top-level expr";
                let tmp_name = Format.sprintf "_anonymous_func_%d" !eval_count in
                eval_count := !eval_count + 1;
                let tmp_func = Ast.Function (Ast.Prototype (tmp_name, [||]), expr) in
@@ -47,8 +47,7 @@ let main_loop the_fpm the_execution_engine input =
              end
         with Codegen.Error s ->
           (* Skip token for error recovery. *)
-          Printf.eprintf "Error%s" s;
-          prerr_newline ();
+          Printf.eprintf "Error%s\n" s;
       end in
     Parser.entry_point Lexer.token input
     |> function
@@ -58,6 +57,7 @@ let main_loop the_fpm the_execution_engine input =
            eval_ast r;
            print_string "ready> ";
            flush stdout;
+           flush stderr;
          end;
          go (count + 1)
   in go 0

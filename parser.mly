@@ -5,7 +5,7 @@
 %token <string> IDENT
 %token DEF
 %token EXTERN
-%token <string> PLUS MINUS TIMES DIV LT
+%token <string> PLUS MINUS TIMES DIV LT GT LE GE
 %token LPAREN RPAREN
 (* %token SET *)
 (* %right SET *)
@@ -56,7 +56,7 @@ argument_expr
   ;
 
 bin_op_expr
-  : PLUS | MINUS | TIMES | DIV | LT { $1 }
+  : PLUS | MINUS | TIMES | DIV | LT | GT | LE | GE { $1 }
   ;
 
 definition

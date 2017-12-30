@@ -19,6 +19,9 @@ rule token = parse
   | float as lxm            { P.NUMBER (float_of_string lxm) }
     (* | '='                     { P.SET } *)
   | '<' as op               { P.LT (String.of_char op) }
+  | '>' as op               { P.GT (String.of_char op) }
+  | "<="                    { P.LE "<=" }
+  | ">="                    { P.GE ">=" }
   | '+' as op               { P.PLUS (String.of_char op) }
   | '-' as op               { P.MINUS (String.of_char op) }
   | '*' as op               { P.TIMES (String.of_char op) }
