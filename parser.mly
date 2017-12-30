@@ -3,10 +3,14 @@
 
 %token <float> NUMBER
 %token <string> IDENT
-%token DEF
-%token EXTERN
-%token <string> PLUS MINUS TIMES DIV LT GT LE GE
 %token LPAREN RPAREN
+
+%token KWD_DEF KWD_EXTERN
+       KWD_IF KWD_THEN KWD_ELSE
+       KWD_FOR KWD_IN
+
+%token <string> PLUS MINUS TIMES DIV LT GT LE GE
+
 (* %token SET *)
 (* %right SET *)
 (* TODO define precedence *)
@@ -46,11 +50,10 @@ expr
     { Ast.Call (id, Array.of_list @@ List.rev args) }
   | id=IDENT LPAREN RPAREN
     { Ast.Call (id, [||]) }
-  (* | e1=expr op=bin_op_expr e2=expr *)
-  | e1=expr op=PLUS e2=expr
-  | e1=expr op=MINUS e2=expr
   | e1=expr op=bin_op_expr e2=expr
     { Ast.Binary (op, e1, e2) }
+  | KWD_IF c=expr KWD_THEN t=expr KWD_ELSE e=expr
+    { Ast.If (c, t, e) }
   ;
 
 argument_expr
@@ -59,16 +62,16 @@ argument_expr
   ;
 
 bin_op_expr
-  : TIMES | DIV | LT | GT | LE | GE { $1 }
+  : PLUS | MINUS | TIMES | DIV | LT | GT | LE | GE { $1 }
   ;
 
 definition
-  : DEF p=prototype e=expr
+  : KWD_DEF p=prototype e=expr
     { Ast.Function (p, e) }
   ;
 
 extern
-  : EXTERN p=prototype { p }
+  : KWD_EXTERN p=prototype { p }
   ;
 
 argument_proto

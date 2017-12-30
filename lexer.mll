@@ -14,11 +14,18 @@ let identifier = ['A'-'Z' 'a'-'z'] ['A'-'z' 'a'-'z' '0'-'9']*
 rule token = parse
   (* TODO skip comment *)
   | [' ' '\r' '\t' '\n']    { token lexbuf }     (* skip blanks *)
-  | "def"                   { P.DEF }
-  | "extern"                { P.EXTERN }
+  (* keywords *)
+  | "def"                   { P.KWD_DEF }
+  | "extern"                { P.KWD_EXTERN }
+  | "if"                    { P.KWD_IF }
+  | "then"                  { P.KWD_THEN }
+  | "else"                  { P.KWD_ELSE }
+  | "for"                   { P.KWD_FOR }
+  | "in"                    { P.KWD_IN }
+
   | identifier as ident     { P.IDENT ident }
   | float as lxm            { P.NUMBER (float_of_string lxm) }
-    (* | '='                     { P.SET } *)
+  (* binary operators *)
   | '<' as op               { P.LT (String.of_char op) }
   | '>' as op               { P.GT (String.of_char op) }
   | "<="                    { P.LE "<=" }
@@ -27,8 +34,10 @@ rule token = parse
   | '-' as op               { P.MINUS (String.of_char op) }
   | '*' as op               { P.TIMES (String.of_char op) }
   | '/' as op               { P.DIV (String.of_char op) }
+  (* misc *)
   | '('                     { P.LPAREN }
   | ')'                     { P.RPAREN }
+  (* punctuations *)
   | eof                     { P.EOF }
   | ';'                     { P.SEMICOLON }
   | ','                     { P.COMMA }

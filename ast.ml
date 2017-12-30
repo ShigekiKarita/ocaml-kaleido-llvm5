@@ -17,6 +17,9 @@ type expr =
 
   (* variant for function calls. *)
   | Call of string * expr array
+
+  (* variant for if/then/else. *)
+  | If of expr * expr * expr
   [@@deriving show]
 
 (* proto - This type represents the "prototype" for a function, which captures
