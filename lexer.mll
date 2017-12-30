@@ -1,6 +1,7 @@
 {
   open Batteries
   module P = Parser
+  exception Error of string
 }
 
 (* let int = '-'? ['0'-'9'] ['0'-'9']* *)
@@ -31,4 +32,10 @@ rule token = parse
   | eof                     { P.EOF }
   | ';'                     { P.SEMICOLON }
   | ','                     { P.COMMA }
-  | _ { raise (Failure (Format.sprintf "don't know how to handle '%s'" (Lexing.lexeme lexbuf))) }
+  | _
+    {
+      let tok = Lexing.lexeme lexbuf in
+      let pos = Lexing.lexeme_start_p lexbuf in
+      let pos_fmt = Format.sprintf "file: %s, line: %d, col: %d" pos.pos_fname pos.pos_lnum pos.pos_cnum in
+      raise (Error (Format.sprintf "unknown token: '%s' at (%s)" tok pos_fmt))
+    }

@@ -43,9 +43,10 @@ let main () =
   ignore (L.PassManager.initialize the_fpm);
 
   (* Run the main "interpreter loop" now. *)
-  let input = match !filename with
-    | None -> Lexing.from_channel stdin
-    | Some s -> File.lines_of s |> List.of_enum |> String.join "\n" |> Lexing.from_string in
+  let fname, input = match !filename with
+    | None -> "<stdin>", Lexing.from_channel stdin
+    | Some s -> s, Lexing.from_channel @@ open_in s in
+  input.lex_curr_p <- { input.lex_curr_p with pos_fname = fname };
   Toplevel.main_loop the_fpm the_execution_engine input;
 
   (* Print out all the generated code. *)

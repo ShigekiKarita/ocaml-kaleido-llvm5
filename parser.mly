@@ -9,9 +9,9 @@
 %token LPAREN RPAREN
 (* %token SET *)
 (* %right SET *)
-
-(* %left PLUS MINUS        /* lowest precedence */ *)
-(* %left TIMES DIV         /* medium precedence */ *)
+(* TODO define precedence *)
+%left PLUS MINUS        /* lowest precedence */
+%left TIMES DIV         /* medium precedence */
 (* %nonassoc UMINUS        /* highest precedence */ *)
 %token EOF
 %token SEMICOLON
@@ -46,6 +46,9 @@ expr
     { Ast.Call (id, Array.of_list @@ List.rev args) }
   | id=IDENT LPAREN RPAREN
     { Ast.Call (id, [||]) }
+  (* | e1=expr op=bin_op_expr e2=expr *)
+  | e1=expr op=PLUS e2=expr
+  | e1=expr op=MINUS e2=expr
   | e1=expr op=bin_op_expr e2=expr
     { Ast.Binary (op, e1, e2) }
   ;
@@ -56,7 +59,7 @@ argument_expr
   ;
 
 bin_op_expr
-  : PLUS | MINUS | TIMES | DIV | LT | GT | LE | GE { $1 }
+  : TIMES | DIV | LT | GT | LE | GE { $1 }
   ;
 
 definition

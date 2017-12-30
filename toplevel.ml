@@ -7,12 +7,18 @@ module L = Llvm
 module E = Llvm_executionengine
 
 
+let prompt () =
+  flush stderr;
+  print_string "ready> ";
+  flush stdout
+
 (* top ::= definition | external | expression | ';' *)
 let main_loop the_fpm the_execution_engine input =
   let eval_count = ref 0 in
   let rec go count =
     let rec eval_ast result =
       Printf.eprintf "AST: %s\n" Ast.(show result);
+      flush stderr;
       begin
         try
           match result with
@@ -47,17 +53,24 @@ let main_loop the_fpm the_execution_engine input =
              end
         with Codegen.Error s ->
           (* Skip token for error recovery. *)
-          Printf.eprintf "Error%s\n" s;
+          Printf.eprintf "Codegen.Error%s\n" s;
       end in
-    Parser.entry_point Lexer.token input
-    |> function
-      | None -> ()
-      | Some r ->
-         begin
-           eval_ast r;
-           print_string "ready> ";
-           flush stdout;
-           flush stderr;
-         end;
-         go (count + 1)
+    try
+      Parser.entry_point Lexer.token input
+      |> function
+        | None -> ()
+        | Some r ->
+           begin
+             eval_ast r;
+             prompt ();
+             go (count + 1)
+           end;
+    with Lexer.Error s ->
+      begin
+        (* Skip token for error recovery. *)
+        Printf.eprintf "Lexer.Error %s\n" s;
+        Lexing.flush_input input;
+        prompt ();
+        go count
+      end
   in go 0
