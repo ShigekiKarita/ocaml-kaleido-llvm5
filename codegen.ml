@@ -23,10 +23,11 @@ let rec codegen_expr = function
       let rhs_val = codegen_expr rhs in
       begin
         match op with
-        | '+' -> build_fadd lhs_val rhs_val "addtmp" builder
-        | '-' -> build_fsub lhs_val rhs_val "subtmp" builder
-        | '*' -> build_fmul lhs_val rhs_val "multmp" builder
-        | '<' ->
+        | "+" -> build_fadd lhs_val rhs_val "addtmp" builder
+        | "-" -> build_fsub lhs_val rhs_val "subtmp" builder
+        | "*" -> build_fmul lhs_val rhs_val "multmp" builder
+        | "/" -> build_fdiv lhs_val rhs_val "divtmp" builder
+        | "<" ->
             (* Convert bool 0/1 to double 0.0 or 1.0 *)
             let i = build_fcmp Fcmp.Ult lhs_val rhs_val "cmptmp" builder in
             build_uitofp i double_type "booltmp" builder

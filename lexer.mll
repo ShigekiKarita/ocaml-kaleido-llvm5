@@ -17,11 +17,12 @@ rule token = parse
   | "extern"                { P.EXTERN }
   | identifier as ident     { P.IDENT ident }
   | float as lxm            { P.NUMBER (float_of_string lxm) }
-  (* | '='                     { P.SET } *)
-  | '+' as op               { P.PLUS op }
-  | '-' as op               { P.MINUS op }
-  | '*' as op               { P.TIMES op }
-  | '/' as op               { P.DIV op }
+    (* | '='                     { P.SET } *)
+  | '<' as op               { P.LT (String.of_char op) }
+  | '+' as op               { P.PLUS (String.of_char op) }
+  | '-' as op               { P.MINUS (String.of_char op) }
+  | '*' as op               { P.TIMES (String.of_char op) }
+  | '/' as op               { P.DIV (String.of_char op) }
   | '('                     { P.LPAREN }
   | ')'                     { P.RPAREN }
   | eof                     { P.EOF }

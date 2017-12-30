@@ -5,13 +5,13 @@
 %token <string> IDENT
 %token DEF
 %token EXTERN
-%token <char> PLUS MINUS TIMES DIV
+%token <string> PLUS MINUS TIMES DIV LT
 %token LPAREN RPAREN
 (* %token SET *)
 (* %right SET *)
 
-%left PLUS MINUS        /* lowest precedence */
-%left TIMES DIV         /* medium precedence */
+(* %left PLUS MINUS        /* lowest precedence */ *)
+(* %left TIMES DIV         /* medium precedence */ *)
 (* %nonassoc UMINUS        /* highest precedence */ *)
 %token EOF
 %token SEMICOLON
@@ -56,7 +56,7 @@ argument_expr
   ;
 
 bin_op_expr
-  : c=PLUS | c=MINUS | c=TIMES | c=DIV { c }
+  : PLUS | MINUS | TIMES | DIV | LT { $1 }
   ;
 
 definition

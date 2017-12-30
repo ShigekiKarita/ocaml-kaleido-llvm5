@@ -13,7 +13,7 @@ type expr =
   | Variable of string
 
   (* variant for a binary operator. *)
-  | Binary of char * expr * expr
+  | Binary of string * expr * expr
 
   (* variant for function calls. *)
   | Call of string * expr array

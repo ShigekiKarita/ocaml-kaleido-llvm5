@@ -11,7 +11,7 @@ clean:
 test: all
 	$(OCB) -I test test.native
 	./test.native
-	./toy.native test.txt
+	./toy.native test.txt 2>&1 | grep -e error || echo ok
 
 .PHONY: all clean byte native profile debug sanity test
 
