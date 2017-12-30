@@ -2,6 +2,8 @@
  * Abstract Syntax Tree (aka Parse Tree)
  *===----------------------------------------------------------------------===*)
 
+open Batteries
+
 (* expr - Base type for all expression nodes. *)
 type expr =
   (* variant for numeric literals like "1.0". *)

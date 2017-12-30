@@ -27,7 +27,7 @@
 %type <Ast.proto> parse_extern
 
 %start entry_point
-%type <Ast.t option> entry_point
+%type <Ast.t list> entry_point
 
 
 %%
@@ -87,10 +87,15 @@ parse_definition: d=definition EOF { d };
 
 parse_extern: x=extern EOF { x }
 
+abstract_syntax
+  : e=expr { Ast.Toplevel e }
+  | d=definition { Ast.Definition d }
+  | x=extern { Ast.Extern x }
+  ;
+
 entry_point
-  : e=expr SEMICOLON { Some (Ast.Toplevel e) }
-  | d=definition SEMICOLON { Some (Ast.Definition d) }
-  | x=extern SEMICOLON { Some (Ast.Extern x) }
-  | SEMICOLON { Some Ast.Semicolon }
-  | EOF { None }
+  : head=abstract_syntax SEMICOLON { [head; Ast.Semicolon] }
+  | head=abstract_syntax SEMICOLON rest=entry_point { head :: Ast.Semicolon :: rest }
+  | SEMICOLON { [Ast.Semicolon] }
+  | EOF { [] }
   ;

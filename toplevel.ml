@@ -2,21 +2,21 @@
  * Top-Level parsing and JIT Driver
  *===----------------------------------------------------------------------===*)
 
+open Batteries
 module L = Llvm
 module E = Llvm_executionengine
 
 
 (* top ::= definition | external | expression | ';' *)
-let main_loop the_fpm the_execution_engine =
-  (* TODO support multiple expressions, externals and definitions *)
+let main_loop the_fpm the_execution_engine input =
+  let eval_count = ref 0 in
   let rec go count =
-    Parser.entry_point Lexer.token (Lexing.from_channel stdin)
-    |> function
-      | None -> ()
-      | Some result ->
+    let rec eval_ast = function
+      | [] -> ()
+      | result :: rest_ast ->
          Printf.printf "AST: %s\n" Ast.(show result);
-         begin match result with
-         | Ast.Semicolon -> () (* ignore top-level semicolons. *)
+         begin try match result with
+         | Ast.Semicolon -> (); (* ignore top-level semicolons. *)
          | Ast.Definition e ->
             begin
               print_endline "parsed a function definition.";
@@ -31,7 +31,8 @@ let main_loop the_fpm the_execution_engine =
             begin
               (* Evaluate a top-level expression into an anonymous function. *)
               print_endline "parsed a top-level expr";
-              let tmp_name = Format.sprintf "_anonymous_func_%d" count in
+              let tmp_name = Format.sprintf "_anonymous_func_%d" !eval_count in
+              eval_count := !eval_count + 1;
               let tmp_func = Ast.Function (Ast.Prototype (tmp_name, [||]), expr) in
 
               (* JIT the function, returning a function pointer. *)
@@ -44,8 +45,20 @@ let main_loop the_fpm the_execution_engine =
               Printf.printf "Evaluated to %f\n" (fp ());
               E.remove_module Codegen.the_module the_execution_engine;
             end
+               with Codegen.Error s ->
+                 (* Skip token for error recovery. *)
+                 Printf.eprintf "\\033[31mError\\033[0m%s" s;
+                 prerr_newline ();
          end;
-         print_string "ready> ";
-         flush stdout;
+         eval_ast rest_ast in
+    Parser.entry_point Lexer.token input
+    |> function
+      | [] -> ()
+      | xs ->
+         begin
+           eval_ast xs;
+           print_string "ready> ";
+           flush stdout;
+         end;
          go (count + 1)
   in go 0

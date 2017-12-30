@@ -2,16 +2,16 @@ OCB_FLAGS := -use-ocamlfind
 OCB := ocamlbuild $(OCB_FLAGS)
 TARGET := toy
 
-all: native # byte profile debug
+all: $(TARGET).native # byte profile debug
 
 clean:
 	$(OCB) -clean
 
-native:
-	$(OCB) $(TARGET).native
+%.native:
+	$(OCB) $@
 
-byte:
-	$(OCB) $(TARGET).byte
+%.byte:
+	$(OCB) $@
 
 profile:
 	$(OCB) -tag profile $(TARGET).native
@@ -22,7 +22,7 @@ debug:
 test: toy.native
 	$(OCB) -I test test.native
 	./test.native
-	cat test.txt | ./toy.native
+	./toy.native text.txt
 
 .PHONY: all clean byte native profile debug sanity test
 

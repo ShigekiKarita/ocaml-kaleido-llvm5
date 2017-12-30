@@ -3,3 +3,4 @@ B _build
 PKG llvm
 PKG ctypes
 PKG ppx_deriving
+PKG batteries

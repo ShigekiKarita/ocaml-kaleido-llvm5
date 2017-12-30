@@ -1,3 +1,5 @@
+open Batteries
+
 let to_ast s = Lexing.from_string s |> Parser.parse_toplevel Lexer.token
 
 let to_ast_def s = Lexing.from_string s |> Parser.parse_definition Lexer.token

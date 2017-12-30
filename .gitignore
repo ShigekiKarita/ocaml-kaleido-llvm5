@@ -6,6 +6,7 @@
 !*.mly
 !*.mll
 !*.md
+!*.txt
 !.gitignore
 !Makefile
 !_tags

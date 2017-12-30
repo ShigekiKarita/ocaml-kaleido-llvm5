@@ -2,6 +2,7 @@
  * Code Generation
  *===----------------------------------------------------------------------===*)
 
+open Batteries
 open Llvm
 
 exception Error of string

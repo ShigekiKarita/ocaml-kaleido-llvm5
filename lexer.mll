@@ -1,5 +1,6 @@
 {
-    module P = Parser
+  open Batteries
+  module P = Parser
 }
 
 (* let int = '-'? ['0'-'9'] ['0'-'9']* *)

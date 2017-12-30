@@ -18,7 +18,7 @@ rewriting [the out-of-date OCaml tutorial in LLVM5.0.0](http://releases.llvm.org
 $ opam install batteries menhir merlin llvm.5.0.0 ctypes-foreign utop
 $ make
 $ ./toy.native
-ready> 1+2;
+ready> 1+2;;
 parsed a top-level expr
 
 define double @_anonymous_func_1() {
@@ -26,7 +26,7 @@ entry:
   ret double 3.000000e+00
 }
 Evaluated to 3.000000
-ready> def f(x) x * 2;
+ready> def f(x) x * 2;;
 parsed a function definition.
 
 define double @f(double %x) {
@@ -34,7 +34,7 @@ entry:
   %multmp = fmul double %x, 2.000000e+00
   ret double %multmp
 }
-ready> def g(x) x * x;
+ready> def g(x) x * x;;
 parsed a function definition.
 
 define double @g(double %x) {
@@ -42,7 +42,7 @@ entry:
   %multmp = fmul double %x, %x
   ret double %multmp
 }
-ready> g(f(3));
+ready> g(f(3));;
 parsed a top-level expr
 
 define double @_anonymous_func_2() {
