@@ -27,7 +27,7 @@
 %type <Ast.proto> parse_extern
 
 %start entry_point
-%type <Ast.t list> entry_point
+%type <Ast.t option> entry_point
 
 
 %%
@@ -94,8 +94,7 @@ abstract_syntax
   ;
 
 entry_point
-  : head=abstract_syntax SEMICOLON { [head; Ast.Semicolon] }
-  | head=abstract_syntax SEMICOLON rest=entry_point { head :: Ast.Semicolon :: rest }
-  | SEMICOLON { [Ast.Semicolon] }
-  | EOF { [] }
+  : ast=abstract_syntax SEMICOLON { Some ast }
+  | SEMICOLON { Some Ast.Semicolon }
+  | EOF { None }
   ;
