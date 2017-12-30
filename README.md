@@ -7,14 +7,15 @@ rewriting [the out-of-date OCaml tutorial in LLVM5.0.0](http://releases.llvm.org
 
 ## DONE
 - chapter 4: adding JIT optimization
--- `ExcecutionEngine.run_function` is obsolete. use `get_function_address` in `toplevel.ml`. see http://releases.llvm.org/5.0.0/docs/tutorial/LangImpl04.html#adding-a-jit-compiler
--- `DataLayout.add` is gone?
+  - `ExcecutionEngine.run_function` is obsolete. use `get_function_address` in `toplevel.ml`. see http://releases.llvm.org/5.0.0/docs/tutorial/LangImpl04.html#adding-a-jit-compiler
+  - `DataLayout.add` is gone?
+- rewrite lexer/parser with menhir
 
 ## TODO
 - chapter 5 (extending the language control flow)
-- rewrite lexer/parser with menhir
 
-``` console
+
+``` llvm
 $ opam install batteries menhir merlin llvm.5.0.0 ctypes-foreign utop
 $ make
 $ ./toy.native
