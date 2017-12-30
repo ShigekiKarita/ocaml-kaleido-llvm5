@@ -17,7 +17,7 @@ clean:
 test: all
 	$(OCB) -I test test.native
 	./test.native
-	./toy.native test.txt 2>&1 | grep -e error || echo ok
+	./toy.native test.txt 2>&1 | grep -e error -e ERROR || echo ok
 
 install-llvm:
 	wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -

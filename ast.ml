@@ -20,6 +20,10 @@ type expr =
 
   (* variant for if/then/else. *)
   | If of expr * expr * expr
+
+  (* variant for for/in *)
+  | For of string * expr * expr * expr option * expr
+
   [@@deriving show]
 
 (* proto - This type represents the "prototype" for a function, which captures

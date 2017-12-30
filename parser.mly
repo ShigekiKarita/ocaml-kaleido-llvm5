@@ -9,6 +9,7 @@
        KWD_IF KWD_THEN KWD_ELSE
        KWD_FOR KWD_IN
 
+%token ASSIGN
 %token <string> PLUS MINUS TIMES DIV LT GT LE GE
 
 (* %token SET *)
@@ -54,6 +55,10 @@ expr
     { Ast.Binary (op, e1, e2) }
   | KWD_IF c=expr KWD_THEN t=expr KWD_ELSE e=expr
     { Ast.If (c, t, e) }
+  | KWD_FOR id=IDENT ASSIGN start_=expr COMMA end_=expr KWD_IN body=expr
+    { Ast.For (id, start_, end_, None, body) }
+  | KWD_FOR id=IDENT ASSIGN start_=expr COMMA end_=expr COMMA step=expr KWD_IN body=expr
+    { Ast.For (id, start_, end_, Some step, body) }
   ;
 
 argument_expr

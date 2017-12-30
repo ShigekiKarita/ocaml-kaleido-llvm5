@@ -35,6 +35,7 @@ rule token = parse
   | '*' as op               { P.TIMES (String.of_char op) }
   | '/' as op               { P.DIV (String.of_char op) }
   (* misc *)
+  | '='                     { P.ASSIGN }
   | '('                     { P.LPAREN }
   | ')'                     { P.RPAREN }
   (* punctuations *)

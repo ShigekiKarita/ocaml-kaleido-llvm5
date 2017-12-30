@@ -1,4 +1,4 @@
-<*.{byte,native}>: package(llvm,llvm.analysis,llvm.executionengine,llvm.scalar_opts)
+<*.{byte,native}>: package(llvm,llvm.analysis,llvm.executionengine,llvm.scalar_opts), use_bindings
 <*>: package(batteries,ppx_deriving.std), use_menhir
 <{toy,toplevel,codegen}.ml>: package(llvm,llvm.analysis,llvm.executionengine,llvm.scalar_opts)
 

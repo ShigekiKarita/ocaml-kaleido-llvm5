@@ -11,9 +11,13 @@ rewriting [the out-of-date OCaml tutorial in LLVM5.0.0](http://releases.llvm.org
   - `DataLayout.add` is gone?
 - rewrite lexer/parser with menhir
 - support file/stdin evaluations
+- chapter 5: extending the language control flow
+  - need to change `Llvm.build_add variable step_val "nextvar" builder` to `Llvm.build_fadd ...`
+  - need to use `gcc` or `clang` instead of `g++` (bindings.c will be regarded as C++)
 
 ## TODO
-- chapter 5 (extending the language control flow)
+- fix precedence of operators
+- chapter 6: Extending the Language: User-defined Operators
 
 
 ### REPL

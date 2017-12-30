@@ -15,5 +15,7 @@ let () =
   Format.printf "%s\n" Ast.(show_proto ext);
   let ifdef = to_ast_def "def baz(x) if x then foo() else bar()" in
   Format.printf "%s\n" Ast.(show_func ifdef);
+  let forex = to_ast_top "for i=1, i<10, 1 in putchard(i)" in
+  Format.printf "%s\n" Ast.(show_expr forex);
 
 

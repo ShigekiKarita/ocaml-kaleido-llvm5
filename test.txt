@@ -7,3 +7,23 @@ sin(1.0);
 extern cos(x);
 def foo(x) sin(x)*sin(x) + cos(x)*cos(x);
 foo(4);
+;
+if 1.0 then 2.0 else 3.0;
+def fib(x)
+  if x < 3 then
+    1
+  else
+    fib(x-1)+fib(x-2);
+fib(3);
+;
+extern putchard(char);
+putchard(42);
+putchard(42);
+def printstar(n)
+  for i = 1, i < n, 1.0 in
+    putchard(42);
+;
+;
+printstar(100);
+
+
