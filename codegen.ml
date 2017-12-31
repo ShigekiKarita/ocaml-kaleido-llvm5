@@ -19,6 +19,23 @@ let rec codegen_expr = function
      (try Hashtbl.find named_values name with
       | Not_found -> raise (Error "unknown variable name"))
   | Ast.Binary (op, lhs, rhs) ->
+     (** codegen example
+
+         source:
+           def foo(a,b) (a*a) + (2*a*b) + (b*b);
+
+         LLVM-IR:
+           define double @foo(double %b, double %a) {
+           entry:
+             %aritmp = fmul double %a, %a
+             %aritmp1 = fmul double %b, %a
+             %aritmp2 = fmul double %aritmp1, 2.000000e+00
+             %aritmp3 = fmul double %b, %b
+             %aritmp4 = fadd double %aritmp3, %aritmp2
+             %aritmp5 = fadd double %aritmp, %aritmp4
+             ret double %aritmp5
+           }
+      *)
      let lhs_val = codegen_expr lhs in
      let rhs_val = codegen_expr rhs in
      let ari_bin_op fari = fari lhs_val rhs_val "aritmp" builder in
@@ -39,6 +56,19 @@ let rec codegen_expr = function
        | _ -> raise (Error "invalid binary operator")
      end
   | Ast.Call (callee, args) ->
+     (** codegen example without JIT
+         source:
+           extern cos(x);
+           cos(1.234);
+
+         LLVM-IR:
+           declare double @cos(double)
+           define double @1() {
+           entry:
+             %calltmp = call double @cos(double 1.234000e+00)
+             ret double %calltmp
+           }
+      *)
      begin
        (* Look up the name in the module table. *)
        let callee =
@@ -53,6 +83,31 @@ let rec codegen_expr = function
        L.build_call callee args "calltmp" builder
      end
   | Ast.If (cond_expr, then_expr, else_expr) ->
+     (** codegen example
+
+         source:
+           extern foo();
+           extern bar();
+           def baz(x) if x then foo() else bar();
+
+         LLVM-IR:
+           declare double @foo()
+           declare double @bar()
+           define double @baz(double %x) {
+           entry:
+             %ifcond = fcmp one double %x, 0.000000e+00
+             br i1 %ifcond, label %then, label %else
+           then:       ; preds = %entry
+             %calltmp = call double @foo()
+             br label %ifcont
+           else:       ; preds = %entry
+             %calltmp1 = call double @bar()
+             br label %ifcont
+           ifcont:     ; preds = %else, %then
+             %iftmp = phi double [ %calltmp, %then ], [ %calltmp1, %else ]
+             ret double %iftmp
+           }
+      *)
      begin
        let cond_gen = codegen_expr cond_expr in
        let zero = L.const_float double_type 0.0 in
@@ -107,6 +162,37 @@ let rec codegen_expr = function
        phi
      end
   | Ast.For (var_name, start_expr, end_expr, step_opt, body_expr) ->
+     (** codegen example
+
+         source:
+           extern putchard(char);
+           def printstar(n)
+             for i = 1, i < n, 1.0 in
+               putchard(42);  # ascii 42 = '*'
+
+
+         LLVM-IR:
+           declare double @putchard(double)
+           define double @printstar(double %n) {
+           entry:
+             ; initial value = 1.0 (inlined into phi)
+             br label %loop
+           loop:       ; preds = %loop, %entry
+             %i = phi double [ 1.000000e+00, %entry ], [ %nextvar, %loop ]
+             ; body
+             %calltmp = call double @putchard(double 4.200000e+01)
+             ; increment
+             %nextvar = fadd double %i, 1.000000e+00
+             ; termination test
+             %cmptmp = fcmp ult double %i, %n
+             %booltmp = uitofp i1 %cmptmp to double
+             %loopcond = fcmp one double %booltmp, 0.000000e+00
+             br i1 %loopcond, label %loop, label %afterloop
+           afterloop:      ; preds = %loop
+             ; loop always returns 0.0
+             ret double 0.000000e+00
+           }
+      *)
      begin
        (* Emit the start code first, without 'variable' in scope. *)
        let start_val = codegen_expr start_expr in

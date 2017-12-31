@@ -9,6 +9,7 @@
        KWD_IF KWD_THEN KWD_ELSE
        KWD_FOR KWD_IN
 
+%token COMMENT_LINE
 %token ASSIGN
 %token <string> PLUS MINUS TIMES DIV LT GT LE GE
 
