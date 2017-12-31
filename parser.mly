@@ -9,7 +9,6 @@
        KWD_IF KWD_THEN KWD_ELSE
        KWD_FOR KWD_IN
 
-%token COMMENT_LINE
 %token ASSIGN
 %token <string> PLUS MINUS TIMES DIV LT GT LE GE
 
@@ -99,14 +98,14 @@ parse_definition: d=definition EOF { d };
 
 parse_extern: x=extern EOF { x }
 
-abstract_syntax
+statement
   : e=expr { Ast.Toplevel e }
   | d=definition { Ast.Definition d }
   | x=extern { Ast.Extern x }
   ;
 
 entry_point
-  : ast=abstract_syntax SEMICOLON { Some ast }
+  : s=statement SEMICOLON { Some s }
   | SEMICOLON { Some Ast.Semicolon }
   | EOF { None }
   ;

@@ -11,9 +11,14 @@ let exp = ['e' 'E'] ['-' '+']? digit+
 let float = digit* frac? exp?
 let identifier = ['A'-'Z' 'a'-'z'] ['A'-'z' 'a'-'z' '0'-'9']*
 
+let blank = [' ' '\t']+
+let newline = "\r\n" | '\r' | '\n'
+
+
 rule token = parse
   (* TODO skip comment *)
-  | [' ' '\r' '\t' '\n']    { token lexbuf }     (* skip blanks *)
+  | blank | newline         { token lexbuf }     (* skip blanks *)
+  | '#'                     { single_comment lexbuf }
   (* keywords *)
   | "def"                   { P.KWD_DEF }
   | "extern"                { P.KWD_EXTERN }
@@ -35,7 +40,6 @@ rule token = parse
   | '*' as op               { P.TIMES (String.of_char op) }
   | '/' as op               { P.DIV (String.of_char op) }
   (* misc *)
-  | '#'                     { P.COMMENT_LINE }
   | '='                     { P.ASSIGN }
   | '('                     { P.LPAREN }
   | ')'                     { P.RPAREN }
@@ -50,3 +54,7 @@ rule token = parse
       let pos_fmt = Format.sprintf "file: %s, line: %d, col: %d" pos.pos_fname pos.pos_lnum pos.pos_cnum in
       raise (Error (Format.sprintf "unknown token: '%s' at (%s)" tok pos_fmt))
     }
+and single_comment = parse
+  | newline { Lexing.new_line lexbuf; token lexbuf }
+  | eof { P.EOF }
+  | _   { single_comment lexbuf }
